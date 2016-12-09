@@ -16,6 +16,17 @@
       "schema": {
         "fields": [
           {
+            "name": "agency_id",
+            "title": "Agency ID",
+            "description": "The agency_id field is an ID that uniquely identifies a transit agency. A transit feed may represent data from more than one agency. The agency_id is dataset unique. This field is optional for transit feeds that only contain data for a single agency.",
+            "type": "string",
+            "format": "default",
+            "constraints": {
+              "required": false,
+              "unique": true
+            }
+          },
+          {
             "name": "agency_name",
             "title": "Agency name",
             "description": "The agency_name field contains the full name of the transit agency. Google Maps will display this name.",
@@ -28,7 +39,7 @@
           {
             "name": "agency_url",
             "title": "Agency URL",
-            "description": "Contains the URL of the transit agency. The value must be a fully qualified URL that includes http:// or https://, and any special characters in the URL must be correctly escaped. See http://www.w3.org/Addressing/URL/4_URI_Recommentations.html for a description of how to create fully qualified URL values.",
+            "description": "The agency_url field contains the URL of the transit agency. The value must be a fully qualified URL that includes http:// or https://, and any special characters in the URL must be correctly escaped. See http://www.w3.org/Addressing/URL/4_URI_Recommentations.html for a description of how to create fully qualified URL values.",
             "type": "string",
             "format": "uri",
             "constraints": {
@@ -38,7 +49,7 @@
           {
             "name": "agency_timezone",
             "title": "Agency timezone",
-            "description": "Contains the timezone where the transit agency is located. Timezone names never contain the space character but may contain an underscore. Please refer to http://en.wikipedia.org/wiki/List_of_tz_zones for a list of valid values. If multiple agencies are specified in the feed, each must have the same agency_timezone. Should be Australia/Brisbane for Queensland",
+            "description": "The agency_timezone field contains the timezone where the transit agency is located. Timezone names never contain the space character but may contain an underscore. Please refer to http://en.wikipedia.org/wiki/List_of_tz_zones for a list of valid values. If multiple agencies are specified in the feed, each must have the same agency_timezone.",
             "type": "string",
             "format": "default",
             "constraints": {
@@ -48,22 +59,42 @@
           {
             "name": "agency_lang",
             "title": "Agency language",
-            "description": "Contains a two-letter ISO 639-1 code for the primary language used by this transit agency. The language code is case-insensitive (both en and EN are accepted). This setting defines capitalization rules and other language-specific settings for all text contained in this transit agency's feed. Please refer to http://www.loc.gov/standards/iso639-2/php/code_list.php for a list of valid values.",
+            "description": "The agency_lang field contains a two-letter ISO 639-1 code for the primary language used by this transit agency. The language code is case-insensitive (both en and EN are accepted). This setting defines capitalization rules and other language-specific settings for all text contained in this transit agency's feed. Please refer to http://www.loc.gov/standards/iso639-2/php/code_list.php for a list of valid values.",
             "type": "string",
             "format": "default",
             "constraints": {
               "required": true,
-              "pattern": "(en|EN)"
+              "pattern": "(en|EN)" // FIXME - Is there an existing pattern or type for IDO 639-1?
             }
           },
           {
             "name": "agency_phone",
             "title": "Agency phone",
-            "description": "Contains a single voice telephone number for the specified agency. This field is a string value that presents the telephone number as typical for the agency's service area. It can and should contain punctuation marks to group the digits of the number. Dialable text (for example, TriMet's 503-238-RIDE) is permitted, but the field must not contain any other descriptive text.",
+            "description": "The agency_phone field contains a single voice telephone number for the specified agency. This field is a string value that presents the telephone number as typical for the agency's service area. It can and should contain punctuation marks to group the digits of the number. Dialable text (for example, TriMet's 503-238-RIDE) is permitted, but the field must not contain any other descriptive text.",
             "type": "string",
             "format": "default",
             "constraints": {
-              "required": true
+              "required": false
+            }
+          },
+          {
+            "name": "agency_fare_url",
+            "title": "Agency phone",
+            "description": "The agency_fare_url specifies the URL of a web page that allows a rider to purchase tickets or other fare instruments for that agency online. The value must be a fully qualified URL that includes http:// or https://, and any special characters in the URL must be correctly escaped. See http://www.w3.org/Addressing/URL/4_URI_Recommentations.html for a description of how to create fully qualified URL values.",
+            "type": "string",
+            "format": "uri",
+            "constraints": {
+              "required": false
+            }
+          },
+          {
+            "name": "agency_email",
+            "title": "Agency email",
+            "description": "Customer service email address for the agency.",  // FIXME - Add exact GTFS description
+            "type": "string",
+            "format": "email",
+            "constraints": {
+              "required": false
             }
           }
         ]
@@ -81,7 +112,7 @@
           {
             "name": "service_id",
             "title": "Service ID",
-            "description": "Contains an ID that uniquely identifies a set of dates when a service exception is available for one or more routes. Each (service_id, date) pair can only appear once in calendar_dates.txt. If the a service_id value appears in both the calendar.txt and calendar_dates.txt files, the information in calendar_dates.txt modifies the service information specified in calendar.txt. This field is referenced by the trips.txt file.",
+            "description": "The service_id contains an ID that uniquely identifies a set of dates when a service exception is available for one or more routes. Each (service_id, date) pair can only appear once in calendar_dates.txt. If the a service_id value appears in both the calendar.txt and calendar_dates.txt files, the information in calendar_dates.txt modifies the service information specified in calendar.txt. This field is referenced by the trips.txt file.",
             "type": "string",
             "format": "default",
             "constraints": {
@@ -91,7 +122,7 @@
           {
             "name": "date",
             "title": "Date",
-            "description": "Specifies a particular date when service availability is different than the norm. You can use the exception_type field to indicate whether service is available on the specified date.  The date field's value should be in YYYYMMDD format.",
+            "description": "The date field specifies a particular date when service availability is different than the norm. You can use the exception_type field to indicate whether service is available on the specified date. The date field's value should be in YYYYMMDD format.",
             "type": "date",
             "format": "fmt:%Y%m%d",
             "constraints": {
@@ -107,7 +138,7 @@
               "required": true,
               "minimum": 1,
               "maximum": 2
-            }
+            }  // FIXME - Do we include these constraints? It breaks extensibility of new types.  Or do we require types to be certain values?
           }
         ]
       },
@@ -290,6 +321,16 @@
             "constraints": {
               "required": false
             }
+          },
+          {
+            "name": "feed_version",
+            "title": "Feed Version",
+            "description": "The feed publisher can specify a string here that indicates the current version of their GTFS feed. GTFS-consuming applications can display this value to help feed publishers determine whether the latest version of their feed has been incorporated.",
+            "type": "string",
+            "format": "default",
+            "constraints": {
+              "required": false
+            }
           }
         ]
       },
@@ -310,6 +351,17 @@
             "format": "default",
             "constraints": {
               "required": true,
+              "unique": true
+            }
+          },
+          {
+            "name": "agency_id",
+            "title": "Agency ID",
+            "description": "The agency_id field defines an agency for the specified route. This value is referenced from the agency.txt file. Use this field when you are providing data for routes from more than one agency.",
+            "type": "string",
+            "format": "default",
+            "constraints": {
+              "required": false,
               "unique": true
             }
           },
@@ -348,7 +400,7 @@
             "constraints": {
               "required": true,
               "minimum": 0,
-              "maximum": 7
+              "maximum": 7  // TODO - Again with types - this doesn't allow extensibility of types
             }
           },
           {
@@ -404,12 +456,12 @@
           {
             "name": "shape_pt_lat",
             "description": "Associates a shape point's latitude with a shape ID. The field value must be a valid WGS 84 latitude. Each row in shapes.txt represents a shape point in your shape definition.",
-            "type": "number",
+            "type": "string",
             "format": "default",
             "constraints": {
               "required": true,
-              "minimum": -29.5,
-              "maximum": -9
+              "minimum": -90.0,
+              "maximum": 90.0
             }
           },
           {
@@ -419,13 +471,23 @@
             "format": "default",
             "constraints": {
               "required": true,
-              "minimum": 138,
-              "maximum": 155
+              "minimum": -180.0,
+              "maximum": 180.0
             }
           },
           {
             "name": "shape_pt_sequence",
             "description": "Associates the latitude and longitude of a shape point with its sequence order along the shape. The values for shape_pt_sequence must be non-negative integers, and they must increase along the trip.",
+            "type": "integer",
+            "format": "default",
+            "constraints": {
+              "required": true,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "shape_dist_traveled",
+            "description": "When used in the shapes.txt file, the shape_dist_traveled field positions a shape point as a distance traveled along a shape from the first shape point. The shape_dist_traveled field represents a real distance traveled along the route in units such as feet or kilometers. This information allows the trip planner to determine how much of the shape to draw when showing part of a trip on the map. The values used for shape_dist_traveled must increase along with shape_pt_sequence: they cannot be used to show reverse travel along a route.",
             "type": "integer",
             "format": "default",
             "constraints": {
@@ -448,7 +510,7 @@
           {
             "name": "stop_id",
             "description": "Contains an ID that uniquely identifies a stop or station. Multiple routes may use the same stop. The stop_id is dataset unique.",
-            "type": "integer",
+            "type": "string",
             "format": "default",
             "constraints": {
               "required": true,
@@ -458,10 +520,10 @@
           {
             "name": "stop_code",
             "description": "Contains short text or a number that uniquely identifies the stop for passengers. Stop codes are often used in phone-based transit information systems or printed on stop signage to make it easier for riders to get a stop schedule or real-time arrival information for a particular stop.  The stop_code field should only be used for stop codes that are displayed to passengers. For internal codes, use stop_id. This field should be left blank for stops without a code.",
-            "type": "integer",
+            "type": "string",
             "format": "default",
             "constraints": {
-              "required": true
+              "required": false
             }
           },
           {
@@ -489,8 +551,8 @@
             "format": "default",
             "constraints": {
               "required": true,
-              "minimum": -29.5,
-              "maximum": -9
+              "minimum": -90.0,
+              "maximum": -90.0
             }
           },
           {
@@ -500,8 +562,8 @@
             "format": "default",
             "constraints": {
               "required": true,
-              "minimum": 138,
-              "maximum": 155
+              "minimum": -180.0,
+              "maximum": 180.0
             }
           },
           {
@@ -510,7 +572,7 @@
             "type": "string",
             "format": "default",
             "constraints": {
-              "required": true
+              "required": false
             }
           },
           {
@@ -526,19 +588,42 @@
             "name": "location_type",
             "description": "Identifies whether this stop ID represents a stop or station. If no location type is specified, or the location_type is blank, stop IDs are treated as stops. Stations can have different properties from stops when they are represented on a map or used in trip planning.  The location type field can have the following values: •0 or blank: Stop. A location where passengers board or disembark from a transit vehicle.  •1: Station. A physical structure or area that contains one or more stop.",
             "type": "integer",
-            "format": "default"
+            "format": "default",
+            "constraints": {
+              "required": false
+              // TODO - no constraint for type here??
+            }
           },
           {
             "name": "parent_station",
             "description": "For stops that are physically located inside stations, this field identifies the station associated with the stop. To use this field, stops.txt must also contain a row where this stop ID is assigned location type=1.",
             "type": "string",
-            "format": "default"
+            "format": "default",
+            "constraints": {
+              "required": false
+              // TODO - no constraint for type here??
+            }
           },
           {
-            "name": "platform_code",
-            "description": "Indicates the platform identifier for a platform stop. This should be just the platform identifier (eg. “G” or “3”). Words like “platform” or “track” (or the feed’s language-specific equivalent) should not be included. This allows feed consumers to more easily internationalize and localize the platform identifier into other languages.",
+            "name": "stop_timezone",
+            "title": "Stop timezone",
+            "description": "The stop_timezone field contains the timezone in which this stop, station, or station entrance is located. Please refer to Wikipedia List of Timezones for a list of valid values. If omitted, the stop should be assumed to be located in the timezone specified by agency_timezone in agency.txt. When a stop has a parent station, the stop is considered to be in the timezone specified by the parent station's stop_timezone value. If the parent has no stop_timezone value, the stops that belong to that station are assumed to be in the timezone specified by agency_timezone, even if the stops have their own stop_timezone values. In other words, if a given stop has a parent_station value, any stop_timezone value specified for that stop must be ignored. Even if stop_timezone values are provided in stops.txt, the times in stop_times.txt should continue to be specified as time since midnight in the timezone specified by agency_timezone in agency.txt. This ensures that the time values in a trip always increase over the course of a trip, regardless of which timezones the trip crosses.",
             "type": "string",
-            "format": "default"
+            "format": "default",
+            "constraints": {
+              "required": false
+            }
+          },
+          {
+            "name": "wheelchair_boarding",
+            "description": "The wheelchair_boarding field identifies whether wheelchair boardings are possible from the specified stop, station, or station entrance. See spec for full description.",
+            "type": "integer",
+            "format": "default",
+            "constraints": {
+              "required": false,
+              "minimum": 0,
+              "maximum": 2  // TODO - Again with types - this doesn't allow extensibility of types
+            }
           }
         ],
         "primaryKey": [
@@ -589,7 +674,17 @@
           {
             "name": "trip_headsign",
             "title": "Trip Headsign",
-            "description": "The text that appears on a sign that identifies the trip's destination to passengers.",
+            "description": "The trip_headsign field contains the text that appears on a sign that identifies the trip's destination to passengers. Use this field to distinguish between different patterns of service in the same route. If the headsign changes during a trip, you can override the trip_headsign by specifying values for the the stop_headsign field in stop_times.txt.",
+            "type": "string",
+            "format": "default",
+            "constraint": {
+              "required": false
+            }
+          },
+          {
+            "name": "trip_short_name",
+            "title": "Trip Short Name",
+            "description": "The trip_short_name field contains the text that appears in schedules and sign boards to identify the trip to passengers, for example, to identify train numbers for commuter rail trips. If riders do not commonly rely on trip names, please leave this field blank. A trip_short_name value, if provided, should uniquely identify a trip within a service day; it should not be used for destination names or limited/express designations.",
             "type": "string",
             "format": "default",
             "constraint": {
@@ -604,7 +699,7 @@
             "format": "default",
             "constraint": {
               "required": false,
-              "pattern": "(0|1)"
+              "pattern": "(0|1)" // Again, this breaks extensibility
             }
           },
           {
@@ -625,6 +720,27 @@
             "format": "default",
             "constraint": {
               "required": false
+            }
+          },
+          {
+            "name": "wheelchair_accessible",
+            "description": "0 (or empty) - indicates that there is no accessibility information for the trip, 1 - indicates that the vehicle being used on this particular trip can accommodate at least one rider in a wheelchair, and * 2 - indicates that no riders in wheelchairs can be accommodated on this trip",
+            "type": "integer",
+            "format": "default",
+            "constraints": {
+              "required": false,
+              "minimum": 0,
+              "maximum": 2  // TODO - Again - this doesn't allow extensibility of types
+            },
+          {
+            "name": "bikes_allowed",
+            "description": "0 (or empty) - indicates that there is no bike information for the trip, 1 - indicates that the vehicle being used on this particular trip can accommodate at least one bicycle, and 2 - indicates that no bicycles are allowed on this trip.",
+            "type": "integer",
+            "format": "default",
+            "constraints": {
+              "required": false,
+              "minimum": 0,
+              "maximum": 2  // TODO - Again - this doesn't allow extensibility of types
             }
           }
         ]
