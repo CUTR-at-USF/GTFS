@@ -1,14 +1,14 @@
 {
-  "name": "gtfs-south-east-queensland",
-  "title": "GTFS South East Queensland",
-  "description": "Timetable data and stop locations for all available TransLink South East Queensland urban bus, rail and ferry services.",
-  "homepage": "https://data.qld.gov.au/dataset/general-transit-feed-specification-gtfs-seq",
+  "name": "gtfs",
+  "title": "General Transit Feed Specification",
+  "description": "GTFS defines a common format for public transportation schedules and associated geographic information. GTFS feeds allow public transit agencies to publish their transit data and developers to write applications that consume that data in an interoperable way.",
+  "homepage": "https://github.com/google/transit/tree/master/gtfs",
   "version": "1",
   "license": {
-    "type": "CC BY 3.0 AU",
-    "url": "https://creativecommons.org/licenses/by/3.0/au/"
+    "type": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0/"
   },
-  "author": "Transport and Main Roads, Queensland Government",
+  "author": "Google",
   "resources": [
     {
       "name": "agency",
